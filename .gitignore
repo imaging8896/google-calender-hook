@@ -1,0 +1,11 @@
+*.pyc
+*.log
+geckodriver
+.cache
+.idea
+reports
+apitestlib/normal_auth_info
+apitestlib/r20_auth_info
+normal_auth_info
+r20_auth_info
+.DS_Store
