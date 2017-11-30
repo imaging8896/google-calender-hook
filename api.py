@@ -51,6 +51,42 @@ class CalenderAPI(object):
     def get_access_token(self):
         return self.credentials.access_token
 
+    def stop_events_watch(self, channel_id, resource_id):
+        result = self.service.channels().stop(body={
+            "id": channel_id,  # A UUID for the channel
+            # "resourceUri": "",  # The canonicalized ID of the watched resource.
+            "kind": "api#channel",      # A channel watching an API resource
+            "resourceId": resource_id,   # An opaque id that identifies the resource that is being watched. Stable across different API versions
+            # "token": "A String", # An arbitrary string associated with the channel that is delivered to the target address with each event delivered over this channel.
+            # "params": { # Additional parameters controlling delivery channel behavior
+            #     "a_key": "A String", # Declares a new parameter by name.
+            # },
+            # "expiration": "A String", # The expiration instant for this channel if it is defined.
+            # "address": "A String", # The address of the receiving entity where events are delivered. Specific to the channel type.
+            # "type": "A String", # The type of delivery mechanism used by this channel
+        }).execute()
+        return result
+
+    def set_events_watch(self, calender_id, channel_id, hook_address, hook_type="web_hook"):
+        now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
+        result = self.service.events().watch(calendarId=calender_id, timeMin=now, singleEvents=False, showDeleted=True, body={
+            # "resourceUri": "A String",  # The canonicalized ID of the watched resource.
+            "kind": "api#channel",  # A channel watching an API resource
+            # "resourceId": "A String",
+        # An opaque id that identifies the resource that is being watched. Stable across different API versions
+        #     "token": "A String",
+        # An arbitrary string associated with the channel that is delivered to the target address with each event delivered over this channel.
+        #     "params": {  # Additional parameters controlling delivery channel behavior
+        #         "a_key": "A String",  # Declares a new parameter by name.
+        #     },
+        #     "expiration": "A String",  # The expiration instant for this channel if it is defined.
+            "address": hook_address,
+        # The address of the receiving entity where events are delivered. Specific to the channel type.
+            "type": hook_type,  # The type of delivery mechanism used by this channel
+            "id": channel_id,  # A UUID for the channel
+        }).execute()
+        return result
+
     def get_events(self, calender_id):
         now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
 
@@ -75,3 +111,4 @@ class CalenderAPI(object):
 if __name__ == '__main__':
     api = CalenderAPI()
     print api.get_access_token()
+
