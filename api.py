@@ -10,12 +10,6 @@ from oauth2client.file import Storage
 import datetime
 
 
-try:
-    import argparse
-    flags = argparse.ArgumentParser(parents=[tools.argparser]).parse_args()
-except ImportError:
-    flags = None
-
 # If modifying these scopes, delete your previously saved credentials
 # at ~/.credentials/calendar-python-quickstart.json
 home_dir = os.path.expanduser('~')
@@ -29,7 +23,6 @@ APPLICATION_NAME = 'Google Calendar API Hook'
 class CalenderAPI(object):
 
     def __init__(self):
-
         if not os.path.exists(credential_dir):
             os.makedirs(credential_dir)
         credential_path = path_join(credential_dir, 'calendar-python-quickstart.json')
@@ -39,10 +32,7 @@ class CalenderAPI(object):
         if not credentials or credentials.invalid:
             flow = client.flow_from_clientsecrets(client_secret, SCOPES)
             flow.user_agent = APPLICATION_NAME
-            if flags:
-                credentials = tools.run_flow(flow, store, flags)
-            else:  # Needed only for compatibility with Python 2.6
-                credentials = tools.run(flow, store)
+            credentials = tools.run(flow, store)
 
         self.credentials = credentials
         http = credentials.authorize(httplib2.Http())
