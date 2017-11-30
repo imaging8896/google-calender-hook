@@ -21,7 +21,7 @@ except ImportError:
 # at ~/.credentials/calendar-python-quickstart.json
 home_dir = os.path.expanduser('~')
 credential_dir = path_join(home_dir, '.credentials')
-client_secret = path_join(home_dir, 'client_secret.json')
+client_secret = path_join(credential_dir, 'client_secret.json')
 processed_events_file = "processed_events"
 
 SCOPES = 'https://www.googleapis.com/auth/calendar'
